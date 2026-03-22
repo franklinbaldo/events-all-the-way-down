@@ -1,0 +1,52 @@
+---
+import '../../styles/global.css';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const formatDate = (d: Date) =>
+  `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>{post.data.title} — Events All the Way Down</title>
+  {post.data.description && <meta name="description" content={post.data.description} />}
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <nav>
+        <a href="/events-all-the-way-down/" class="site-title">Events All the Way Down</a>
+        <a href="/events-all-the-way-down/blog" class="nav-link">Posts</a>
+        <a href="https://franklinbaldo.github.io" class="nav-link">Main blog ↗</a>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <article>
+      <header style="margin-bottom: 2rem;">
+        <h1>{post.data.title}</h1>
+        <time style="color: var(--color-muted); font-size: 0.875rem;">{formatDate(post.data.date)}</time>
+      </header>
+      <Content />
+    </article>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <p><a href="/events-all-the-way-down/blog">← All posts</a></p>
+    </div>
+  </footer>
+</body>
+</html>
