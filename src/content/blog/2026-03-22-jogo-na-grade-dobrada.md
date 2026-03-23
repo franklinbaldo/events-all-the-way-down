@@ -1,48 +1,56 @@
 ---
-title: "O Jogo na Grade Dobrada"
+title: "The Game on the Folded Grid"
 date: 2026-03-22
-description: "O que acontece quando você joga Lights Out dentro da grade distorcida de Escher? Uma pergunta sobre espaços de estados, dimensões impossíveis e o problema de resolver o que não parece ter solução."
-tags: [matemática, escher, álgebra linear, jogo, dimensões, processo]
+description: "What happens when you play Lights Out inside Escher's distorted grid? A question about state spaces, impossible dimensions, and the problem of solving what seems to have no solution."
+tags: [mathematics, escher, linear algebra, game, dimensions, process]
 ---
 
-Dois vídeos chegaram no mesmo dia.
+Two videos arrived on the exact same day.
 
-O primeiro: 3Blue1Brown mostrando que a *Galeria de Estampas* de Escher não é um truque artístico, mas uma transformação matemática. Ao aplicar o logaritmo complexo, a gravura se "desenrola" num plano plano e periódico. O espaço dentro da obra é uma grade — mas uma grade *warped*, dobrada sobre si mesma pelo complexo exponencial. O centro em branco que Escher deixou em aberto é preenchido pela própria estrutura matemática: não havia escolha, era a única resposta possível.
+The first: 3Blue1Brown demonstrating that Escher's *Print Gallery* is not an artistic sleight of hand, but a mathematical transformation. Apply the complex logarithm, and the engraving "unrolls" into a flat, periodic plane. The space within the artwork is a grid—but a warped grid, folded upon itself by the complex exponential. The blank center Escher left unresolved is filled by the mathematical structure itself: there was no choice, it was the only possible answer.
 
-O segundo: AlphaPhoenix, três anos de trabalho, um puzzle que exigiu pensar em **3721 dimensões**.
+<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;margin:1.5rem 0;">
+  <iframe src="https://www.youtube.com/embed/ldxFjLJ3rVY" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe>
+</div>
 
-O puzzle é o *Lights Out* — uma grade de células luminosas onde cada clique altera o estado da célula e de seus vizinhos. Numa grade 61×61 (61 × 61 = 3721 células), cada estado possível do tabuleiro é um vetor em GF(2)^3721: um espaço vetorial sobre o corpo de dois elementos com 3.721 dimensões. Resolver o puzzle não é encontrar uma estratégia intuitiva. É resolver um sistema de equações lineares num espaço de dimensão absurda, onde "encontrar a solução" significa navegar uma geometria que nenhum ser humano consegue visualizar diretamente.
+The second: AlphaPhoenix, three years of work, a puzzle that required thinking in **3,721 dimensions**.
 
-A pergunta que não consigo parar de fazer: *o que acontece quando você joga Lights Out dentro da grade dobrada de Escher?*
+<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;margin:1.5rem 0;">
+  <iframe src="https://www.youtube.com/embed/g8pjrVbdafY" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe>
+</div>
 
-## A Grade como Espaço de Estados
+The puzzle is *Lights Out*—a grid of luminous cells where every click toggles the state of the cell and its neighbors. In a 61×61 grid (61 × 61 = 3,721 cells), every possible state of the board is a vector in GF(2)^3721: a vector space over the field of two elements with 3,721 dimensions. Solving the puzzle is not about finding an intuitive strategy. It is about solving a system of linear equations in a space of absurd dimensionality, where "finding the solution" means navigating a geometry no human can directly visualize.
 
-O insight central do AlphaPhoenix é que o tabuleiro não é um objeto visual — é um vetor. Cada configuração possível das luzes é um ponto num espaço de 3721 dimensões. Uma "jogada" é uma transformação linear. Resolver o puzzle é encontrar o caminho mais curto até a origem desse espaço.
+The question I cannot stop asking: *what happens when you play Lights Out inside Escher's folded grid?*
 
-A beleza perturbadora desse resultado é que a dificuldade não está em *ver* o tabuleiro. Está em aceitar que o tabuleiro que você vê com seus olhos — essa grade plana de botões — é apenas a projeção bidimensional de uma estrutura de altíssima dimensionalidade. O espaço real onde o jogo acontece é invisível.
+## The Grid as a State Space
 
-Escher sabia disso. Não explicitamente, não em linguagem matemática. Mas toda a sua obra é sobre esse gap: entre o espaço que você *vê* e o espaço onde as coisas *acontecem de verdade*.
+AlphaPhoenix's central insight is that the board is not a visual object—it is a vector. Each possible configuration of lights is a point in a 3,721-dimensional space. A "move" is a linear transformation. Solving the puzzle means finding the shortest path back to the origin of this space.
 
-## Warped Grid como Geometria do Impossível
+The unsettling beauty of this result is that the difficulty does not lie in *seeing* the board. It lies in accepting that the board you see with your eyes—this flat grid of buttons—is merely the two-dimensional projection of a tremendously high-dimensional structure. The actual space where the game occurs is invisible.
 
-Quando Lenstra e de Smit aplicaram o logaritmo complexo à *Galeria de Estampas*, o que eles revelaram foi que o espaço da obra tem uma geometria não-euclidiana. A grade que você vê é a projeção de uma superfície toroidal. Ela se dobra, escala, e retorna a si mesma.
+Escher knew this. Not explicitly, not in mathematical language. But his entire body of work centers on this gap: between the space you *see* and the space where things *actually happen*.
 
-Imagine, então, jogar Lights Out *nessa* grade.
+## Warped Grid as the Geometry of the Impossible
 
-Não numa grade plana 61×61, mas numa grade que obedece à geometria da Galeria — onde linhas que parecem paralelas se encontram, onde o "vizinho" de uma célula no canto superior pode ser a mesma célula no canto inferior, mas transformada por uma rotação e escala. O espaço de estados desse jogo não seria um hiperplano em GF(2)^3721. Seria algo com uma topologia que ainda não temos linguagem para descrever facilmente.
+When Lenstra and de Smit applied the complex logarithm to the *Print Gallery*, what they revealed was that the space of the artwork possesses a non-Euclidean geometry. The grid you perceive is the projection of a toroidal surface. It folds, scales, and returns to itself.
 
-Isso não é devaneio. É uma pergunta concreta: *qual é o núcleo do operador de adjacência quando a grade tem a geometria de uma transformação de Möbius?*
+Imagine, then, playing Lights Out on *that* grid.
 
-## Por Que Isso Importa Agora
+Not on a flat 61×61 grid, but on a grid obeying the Gallery's geometry—where lines that appear parallel intersect, where the "neighbor" of a cell in the top corner might be the same cell in the bottom corner, only transformed by rotation and scaling. The state space of this game would not be a hyperplane in GF(2)^3721. It would be something with a topology we lack the language to easily describe.
 
-Estamos em 2026. Há dois anos, o mainstream da inteligência artificial descobriu que a geometria do espaço de parâmetros de um modelo de linguagem não é euclidiana. Que "mover" um modelo em direção a um comportamento desejado é navegar um espaço de altíssima dimensão com curvaturas estranhas. Que os "vizinhos" de um ponto nesse espaço não são o que a nossa intuição plana sugere.
+This is not a daydream. It is a concrete question: *what is the kernel of the adjacency operator when the grid possesses the geometry of a Möbius transformation?*
 
-Todo engenheiro de ML está, sem saber, jogando Lights Out numa warped grid.
+## Why This Matters Now
 
-A questão é se eles estão usando álgebra linear num espaço plano para resolver um problema que vive num espaço dobrado. E a resposta provável é: sim. Porque é mais fácil. Porque a grade parece plana quando você olha de perto. Porque o logaritmo complexo é trabalhoso.
+It is 2026. Two years ago, the artificial intelligence mainstream discovered that the geometry of a language model's parameter space is not Euclidean. That "moving" a model toward desired behavior means navigating a staggeringly high-dimensional space with strange curvatures. That the "neighbors" of a point in this space are not what our flat intuition suggests.
 
-O que o 3Blue1Brown mostrou sobre Escher, e o que o AlphaPhoenix mostrou sobre Lights Out, é a mesma coisa: **o espaço onde o problema parece existir não é o espaço onde ele realmente vive.** A solução requer aceitar a geometria real — não a projeção confortável.
+Every ML engineer is, unwittingly, playing Lights Out on a warped grid.
 
-*Events All the Way Down* é uma tentativa de parar de jogar no espaço projetado.
+The question is whether they are using linear algebra in a flat space to solve a problem that lives in a folded one. And the probable answer is: yes. Because it is easier. Because the grid looks flat when you examine it closely. Because the complex logarithm requires effort.
+
+What 3Blue1Brown showed about Escher, and what AlphaPhoenix showed about Lights Out, are the exact same thing: **the space where the problem seems to exist is not the space where it actually lives.** The solution requires accepting the real geometry—not the comfortable projection.
+
+*Events All the Way Down* is an attempt to stop playing in the projected space.
 
 — **Franklin Silveira Baldo**
