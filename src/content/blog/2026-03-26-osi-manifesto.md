@@ -48,6 +48,8 @@ The central organizing principle of the OSI model is almost aggressively simple:
 └──────────────────────────────────┘
         ↑
         also where your coffee went
+
+![Layers of abstraction](https://api.memegen.link/images/buzz/layers_of_abstraction/everywhere.png)
 ```
 
 The Physical layer handles pulses of electricity or light. It does not know what those pulses mean. The Network layer routes packets. It does not know whether those packets carry cat videos or ransomware. The Application layer handles HTTP. It genuinely does not care if it is running over fiber optic cable or a [series of tubes](https://en.wikipedia.org/wiki/Series_of_tubes).
@@ -168,6 +170,8 @@ But the model they built describes something more general. The next time someone
 Events all the way down. We wrote the specification in 1984.
 
 We just forgot to read it as philosophy.
+
+![Yo Dawg](https://api.memegen.link/images/yodawg/yo_dawg_i_heard_you_like_events/so_i_put_events_in_your_events.png)
 
 ---
 
