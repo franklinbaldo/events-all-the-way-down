@@ -131,12 +131,14 @@
     background: none;
     border: 1px solid var(--color-border);
     border-radius: 4px;
-    padding: 0.2rem 0.6rem;
+    padding: 0.35rem 0.75rem;
+    min-height: 36px;
     font-size: 0.8rem;
     color: var(--color-muted);
     cursor: pointer;
     transition: border-color 0.1s, color 0.1s;
     white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .search-trigger:hover {
@@ -167,6 +169,14 @@
     padding-top: 10vh;
   }
 
+  /* On mobile: slide up from bottom */
+  @media (max-width: 639px) {
+    .overlay {
+      align-items: flex-end;
+      padding-top: 0;
+    }
+  }
+
   .modal {
     background: var(--color-bg);
     border: 1px solid var(--color-border);
@@ -177,6 +187,16 @@
     flex-direction: column;
     overflow: hidden;
     box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  }
+
+  @media (max-width: 639px) {
+    .modal {
+      width: 100%;
+      max-height: 80vh;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-bottom: none;
+    }
   }
 
   .search-bar {
@@ -204,11 +224,13 @@
     background: none;
     border: 1px solid var(--color-border);
     border-radius: 3px;
-    padding: 0.1rem 0.35rem;
+    padding: 0.3rem 0.6rem;
+    min-height: 32px;
     font-size: 0.75rem;
     font-family: ui-monospace, monospace;
     color: var(--color-muted);
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .results {
@@ -231,7 +253,7 @@
 
   li a {
     display: block;
-    padding: 0.75rem 1.25rem;
+    padding: 0.875rem 1.25rem;
     border-bottom: none;
     transition: background 0.1s;
     text-decoration: none;

@@ -32,13 +32,19 @@
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: var(--color-muted);
-    padding: 0.25rem 0.5rem;
+    padding: 0.4rem 0.6rem;
+    min-width: 36px;
+    min-height: 36px;
     border-radius: 3px;
     transition: color 0.1s;
     line-height: 1;
     margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
   }
 
   button:hover {

@@ -64,12 +64,14 @@
     background: none;
     border: 1px solid var(--color-border);
     border-radius: 2rem;
-    padding: 0.2rem 0.75rem;
+    padding: 0.375rem 0.875rem;
+    min-height: 36px;
     font-size: 0.8rem;
     font-family: ui-monospace, monospace;
     color: var(--color-muted);
     cursor: pointer;
     transition: all 0.1s;
+    -webkit-tap-highlight-color: transparent;
   }
 
   button:hover {
