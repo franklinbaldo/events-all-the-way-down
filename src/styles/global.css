@@ -39,6 +39,7 @@ h3 { font-size: 1.2rem; font-weight: 600; margin: 1.5rem 0 0.4rem; }
 h4, h5, h6 { font-size: 1rem; font-weight: 600; margin: 1rem 0 0.3rem; }
 
 p, li { max-width: 68ch; margin-bottom: 1.2rem; }
+img, video { max-width: 100%; height: auto; }
 ul, ol { padding-left: 1.5rem; }
 
 a { color: var(--color-accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.1s; }
@@ -90,16 +91,26 @@ hr { border: none; border-top: 1px solid var(--color-border); margin: 2rem 0; }
 
 .site-footer { border-top: 1px solid var(--color-border); margin-top: 4rem; padding: 2rem 0; color: var(--color-muted); font-size: 0.875rem; }
 
+/* Post page: title + meta above the grid — always visible before the TOC on mobile */
+.post-header {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 0;
+}
+
 /* Post page: two-column layout (article + TOC sidebar on wide screens) */
 .post-layout {
   max-width: 68rem;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: 0 1.5rem 2rem;
   display: grid;
   grid-template-columns: 1fr;
   gap: 3rem;
   align-items: start;
 }
+
+/* Prevent grid children from overflowing their cell (e.g. wide code blocks) */
+.post-layout > * { min-width: 0; }
 
 @media (min-width: 1024px) {
   .post-layout {
@@ -177,7 +188,8 @@ pre { -webkit-overflow-scrolling: touch; }
   }
 
   /* Post layout: tighter on small screens */
-  .post-layout { padding: 1.25rem 1rem; gap: 1.25rem; }
+  .post-header { padding: 1.25rem 1rem 0; }
+  .post-layout { padding: 0 1rem 1.25rem; gap: 1.25rem; }
 
   /* Bigger tap targets in post list */
   .post-list li { padding: 1.1rem 0; }

@@ -1,5 +1,8 @@
 # build output
 dist/
+
+# images downloaded at build time by remark-download-images
+public/images/
 # generated types
 .astro/
 
