@@ -28,7 +28,7 @@ const base = import.meta.env.BASE_URL;
         <ul class="post-list">
           {posts.map(post => (
             <li>
-              <a href={`${base}blog/${post.id}`} class="post-title">{post.data.title}</a>
+              <a href={`${base}/blog/${post.id}`} class="post-title">{post.data.title}</a>
               <div class="post-date">{formatDate(post.data.date)}</div>
               {post.data.description && <p class="post-desc">{post.data.description}</p>}
             </li>
