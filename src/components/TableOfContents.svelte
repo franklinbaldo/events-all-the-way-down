@@ -5,6 +5,17 @@
   let activeId = $state('');
   let detailsEl = $state();
 
+  // Runs after every DOM update where detailsEl changes (undefined → element).
+  // Using $effect ensures syncOpen() is called only once the <details> is in the DOM.
+  $effect(() => {
+    if (!detailsEl) return;
+    const mq = window.matchMedia('(min-width: 1024px)');
+    function syncOpen() { detailsEl.open = mq.matches; }
+    mq.addEventListener('change', syncOpen);
+    syncOpen();
+    return () => mq.removeEventListener('change', syncOpen);
+  });
+
   onMount(() => {
     const article = document.querySelector('article');
     if (!article) return;
@@ -22,14 +33,6 @@
 
     if (headings.length === 0) return;
 
-    // Auto-open on desktop, closed on mobile
-    function syncOpen() {
-      if (detailsEl) detailsEl.open = window.matchMedia('(min-width: 1024px)').matches;
-    }
-    const mq = window.matchMedia('(min-width: 1024px)');
-    mq.addEventListener('change', syncOpen);
-    syncOpen();
-
     const observer = new IntersectionObserver(
       entries => {
         for (const entry of entries) {
@@ -43,10 +46,7 @@
     );
 
     article.querySelectorAll('h2, h3').forEach(h => observer.observe(h));
-    return () => {
-      mq.removeEventListener('change', syncOpen);
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   });
 </script>
 
