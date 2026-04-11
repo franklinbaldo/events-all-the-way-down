@@ -1,7 +1,6 @@
 ---
 title: "The Work That Proves Itself"
 date: 2026-03-24
-pubDate: 2026-03-24
 description: "How certain creations cease to be objects and become perpetual events, defining their own validation criteria and surviving the test of time."
 tags: [philosophy, literature, events]
 ---

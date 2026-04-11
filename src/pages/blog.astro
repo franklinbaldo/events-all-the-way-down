@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import { getCollection } from 'astro:content';
 
-const posts = (await getCollection('blog'))
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 const formatDate = (d: Date) =>
@@ -30,12 +30,17 @@ const formatDate = (d: Date) =>
     <ul class="post-list">
       {posts.map(post => (
         <li>
-          <a href={`/events-all-the-way-down/blog/${post.slug}`} class="post-title">{post.data.title}</a>
+          <a href={`/events-all-the-way-down/blog/${post.id}`} class="post-title">{post.data.title}</a>
           <div class="post-date">{formatDate(post.data.date)}</div>
           {post.data.description && <p class="post-desc">{post.data.description}</p>}
         </li>
       ))}
     </ul>
   </main>
+  <footer class="site-footer">
+    <div class="container">
+      <p>By <a href="https://franklinbaldo.github.io">Franklin Silveira Baldo</a></p>
+    </div>
+  </footer>
 </body>
 </html>

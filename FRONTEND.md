@@ -9,20 +9,20 @@ A philosophical blog about process ontology deserves a frontend that practices w
 | Layer | Tool | Why |
 |---|---|---|
 | Meta-framework | **Astro 6** | Zero-JS by default; content collections are first-class; static output maps to GitHub Pages without ceremony |
-| Components | **Astro components only** | No Svelte, React, or Vue — the entire site renders to HTML at build time; adding a reactive framework would be adding unused substance |
+| Interactive components | **Svelte 5** | Runes-based reactivity compiles away to minimal JS; islands architecture means Svelte only ships where it is explicitly used |
 | Styling | **Vanilla CSS with custom properties** | Design tokens in `:root` give all the composability of a CSS-in-JS system with zero runtime cost |
 | Typography | **EB Garamond via @fontsource** | Self-hosted instead of Google Fonts — no third-party request on page load, no privacy trade-off |
 | Search | **Pagefind** | Post-build static index; search that works without a server, without JavaScript bundles shipped up front |
-| Rich content | **@astrojs/mdx** | Enables Astro components inside Markdown when needed (callouts, diagrams, interactive footnotes) without surrendering the prose-first authoring model |
+| Rich content | **@astrojs/mdx** | Enables Astro and Svelte components inside `.mdx` posts for callouts, diagrams, and interactive footnotes without surrendering the prose-first authoring model |
 | RSS | **@astrojs/rss** | Already in use; keep it |
 | Deployment | **GitHub Pages (static)** | Zero infrastructure; `astro build` output committed via CI |
 
 ### What is deliberately absent
 
-- **No UI framework** (React, Svelte, Vue, Solid). There are no interactive data dashboards, no complex client state, no real-time feeds. Adding a framework here would be premature substance — a thing masquerading as process.
-- **No TanStack Query / SWR**. There are no runtime data fetches. Content is resolved at build time.
-- **No Tailwind**. The existing `global.css` with design tokens is 83 lines and covers everything. Utility-class frameworks impose a secondary vocabulary on top of CSS; the vocabulary here is already minimal.
-- **No client-side routing (SPA)**. The site is a collection of essays, not an application. Full page navigations are fine and preserve browser history without JavaScript overhead.
+- **No React, Vue, or Solid.** Svelte is sufficient for interactive islands; adding a second framework would be pure overhead.
+- **No TanStack Query / SWR.** There are no runtime data fetches. Content is resolved at build time.
+- **No Tailwind.** The existing `global.css` with design tokens covers everything. Utility-class frameworks impose a secondary vocabulary on top of CSS; the vocabulary here is already minimal.
+- **No client-side routing (SPA).** The site is a collection of essays, not an application. Full page navigations are fine and preserve browser history without JavaScript overhead.
 
 ---
 
@@ -36,7 +36,7 @@ This applies to frontend architecture too. Pages are not static artifacts sittin
 
 1. **HTML first.** Every page should be fully readable with CSS disabled and JavaScript blocked. The prose is the product.
 2. **CSS second.** Layout, typography, and colour exist to serve legibility, not brand. The warm earth-tone palette (`#faf8f4` → `#1c1917`) was chosen for long-form reading, not for visual novelty.
-3. **JavaScript last — and only if irreplaceable.** Pagefind requires a small script tag. A dark-mode toggle requires a handful of lines. These are acceptable. A 40 kB framework for rendering a list of blog posts is not.
+3. **JavaScript last — and only if irreplaceable.** Svelte components load only where needed (`client:visible`, `client:idle`). A dark-mode toggle or search UI is an acceptable use. A 40 kB framework for rendering a list of blog posts is not.
 
 ---
 
@@ -45,7 +45,7 @@ This applies to frontend architecture too. Pages are not static artifacts sittin
 ```
 src/
 ├── content/
-│   ├── blog/          ← Markdown/MDX files; one file = one post
+│   ├── blog/          ← Markdown and MDX files; one file = one post
 │   └── manifesto.md   ← The primary long-form work
 ├── pages/
 │   ├── index.astro    ← Home: manifesto excerpt + 5 latest posts
@@ -58,18 +58,19 @@ src/
 
 ### Content collection schema
 
-Posts are validated via Zod in `src/content.config.ts`. Required frontmatter:
+Posts are validated via Zod in `src/content.config.ts`. Frontmatter fields:
 
 ```yaml
 ---
-title: "Post Title"
-date: 2026-04-11        # ISO 8601
-description: "One sentence."
-tags: ["process", "philosophy"]
+title: "Post Title"          # required
+date: 2026-04-11             # required — ISO 8601
+description: "One sentence." # optional — shown in post list and <meta>
+tags: ["process", "philosophy"] # optional
+draft: true                  # optional — excludes post from all listings and routes
 ---
 ```
 
-`draft: true` is supported — drafts are excluded from production builds and the RSS feed.
+`draft: true` posts are excluded from every `getCollection('blog')` call and will never appear in the generated site or RSS feed.
 
 ### Slug convention
 
@@ -81,6 +82,30 @@ the-landscape-that-walks.md              → /blog/the-landscape-that-walks
 ```
 
 Prefer the un-prefixed form for timeless pieces, the date-prefixed form for time-sensitive commentary.
+
+---
+
+## Svelte Islands
+
+Svelte is available for interactive components but must not be used where plain HTML and CSS suffice.
+
+### Hydration directives
+
+| Directive | When to use |
+|---|---|
+| `client:visible` | Component only needed when scrolled into view (e.g. search) |
+| `client:idle` | Non-critical enhancement after page load (e.g. theme toggle) |
+| `client:load` | Required immediately on load — justify in a comment |
+| `client:only="svelte"` | Component has no meaningful server-rendered HTML |
+
+### State management
+
+Follow the same four-tier pattern as [causaganha](https://github.com/franklinbaldo/causaganha):
+
+1. **Build-time** — derived from content collection at `astro build`
+2. **Component-local** — Svelte 5 runes (`$state`, `$derived`)
+3. **Cross-island shared** — `.svelte.ts` store files
+4. **Singleton lazy-loaders** — for heavy resources loaded once per session
 
 ---
 
@@ -138,9 +163,10 @@ Measure (`68ch`) and container (`44rem`) are set independently so code blocks an
 
 1. **No Google Fonts requests** — use `@fontsource/eb-garamond` (self-hosted, tree-shaken). Remove the `@import url(...)` from `global.css` after installing the package.
 2. **No client-side JavaScript by default.** Every `.astro` page must render without `client:*` directives unless there is a documented reason.
-3. **Images use the Astro `<Image />` component** for automatic format conversion and responsive sizing. Do not use raw `<img>` tags for content images.
-4. **Pagefind runs post-build** (`pagefind --site dist`). Do not ship a search bundle that loads before user intent.
-5. **`<head>` stays lean.** No analytics, no tracking pixels, no social SDKs. RSS and canonical `<link>` tags are sufficient.
+3. **Svelte components are islands**, not the whole page. Never wrap an entire layout in a Svelte component.
+4. **Images use the Astro `<Image />` component** for automatic format conversion and responsive sizing. Do not use raw `<img>` tags for content images.
+5. **Pagefind runs post-build** (`pagefind --site dist`). Do not ship a search bundle that loads before user intent.
+6. **`<head>` stays lean.** No analytics, no tracking pixels, no social SDKs. RSS and canonical `<link>` tags are sufficient.
 
 ---
 
@@ -149,7 +175,7 @@ Measure (`68ch`) and container (`44rem`) are set independently so code blocks an
 These are not planned; they are *available* if the site's needs grow. Add them only when the absence is actively felt.
 
 ### Dark mode toggle
-A `<ThemeToggle>` Astro component that sets `document.documentElement.dataset.theme` and persists to `localStorage`. Inject a tiny inline `<script>` in `<head>` (before first paint) to restore the saved preference without flash.
+A `<ThemeToggle>` Svelte component (`client:idle`) that sets `document.documentElement.dataset.theme` and persists to `localStorage`. Inject a tiny inline `<script>` in `<head>` (before first paint) to restore the saved preference without flash.
 
 ### Estimated reading time
 Compute at build time from word count in the content collection loader. Expose as `post.data.readingTime` and display in post metadata. Zero runtime cost.
@@ -163,17 +189,10 @@ npm install --save-dev pagefind
 # Add to build script: astro build && pagefind --site dist
 ```
 
-Add a `<Search />` component that loads the Pagefind UI only after the user clicks a search icon (`client:visible`). The index is built once at deploy time; no server needed.
-
-### MDX support
-```bash
-npx astro add mdx
-```
-
-Enables importing Astro components into `.mdx` posts. Useful for interactive diagrams, pull quotes with custom styling, or footnote components. Use sparingly — the prose should not depend on components to be understood.
+Add a `<Search />` Svelte component (`client:visible`) that loads the Pagefind UI only after the user focuses the search input. The index is built once at deploy time; no server needed.
 
 ### Open Graph / Social cards
-Generate `og:image` cards at build time using Astro's `@astrojs/og` or a custom endpoint rendering an Astro template to PNG via Satori. One card per post, derived from title and description frontmatter.
+Generate `og:image` cards at build time using a custom endpoint rendering an Astro template to PNG via Satori. One card per post, derived from title and description frontmatter.
 
 ---
 
@@ -181,12 +200,13 @@ Generate `og:image` cards at build time using Astro's `@astrojs/og` or a custom 
 
 1. Create `src/pages/your-page.astro`.
 2. Import the shared layout (once one exists) or compose `<head>`, `.site-header`, and `.site-footer` directly.
-3. Use only Astro components. If you reach for `client:load`, write down why in a comment.
+3. Prefer Astro components. Use Svelte only for interactive behaviour. If you reach for `client:load`, write down why in a comment.
 4. Run `astro build` locally and check the `dist/` output size before committing.
 
 ## Adding a New Blog Post
 
-1. Create `src/content/blog/your-slug.md` (or `.mdx`).
-2. Add required frontmatter (`title`, `date`, `description`, `tags`).
+1. Create `src/content/blog/your-slug.md` (or `your-slug.mdx` if you need Svelte/Astro components in the prose).
+2. Add required frontmatter (`title`, `date`). All other fields are optional.
 3. Write. The build handles slug, routing, RSS, and the post listing automatically.
 4. To preview: `npm run dev`.
+5. To keep a post out of production while drafting: add `draft: true` to the frontmatter.
