@@ -11,6 +11,15 @@
   --color-accent: #92400e;
 }
 
+[data-theme="dark"] {
+  --color-bg:      #1c1917;
+  --color-surface: #292524;
+  --color-border:  #44403c;
+  --color-text:    #faf8f4;
+  --color-muted:   #a8a29e;
+  --color-accent:  #fb923c;
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
