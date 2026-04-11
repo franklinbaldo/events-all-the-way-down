@@ -39,7 +39,7 @@
 <ul class="post-list">
   {#each filtered as post (post.id)}
   <li>
-    <a href={`${base}blog/${post.id}`} class="post-title">{post.title}</a>
+    <a href={`${base}/blog/${post.id}`} class="post-title">{post.title}</a>
     <div class="post-date">{formatDate(post.date)}</div>
     {#if post.description}
     <p class="post-desc">{post.description}</p>
