@@ -139,10 +139,13 @@ pre:hover .copy-btn,
 
 /* ===== MOBILE / RESPONSIVE IMPROVEMENTS ===== */
 
-/* Smooth scrolling with offset for sticky header */
+/* Scroll offset for sticky header; smooth only when user hasn't requested reduced motion */
 html {
-  scroll-behavior: smooth;
   scroll-padding-top: 4rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
 }
 
 /* Touch devices: always show copy button (no hover) */
