@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import ThemeToggle from '../components/ThemeToggle.svelte';
+import SearchModal from '../components/SearchModal.svelte';
 
 interface Props {
   title: string;
@@ -65,6 +66,7 @@ const siteName = 'Events All the Way Down';
         <a href={base} class="site-title">{siteName}</a>
         <a href={`${base}blog`} class="nav-link">Posts</a>
         <a href="https://franklinbaldo.github.io" class="nav-link">Main blog ↗</a>
+        <SearchModal client:load />
         <ThemeToggle client:idle />
       </nav>
     </div>
