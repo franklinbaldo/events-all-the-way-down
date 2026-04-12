@@ -71,8 +71,7 @@ const siteName = 'Events All the Way Down';
         <a href={base} class="site-title">{siteName}</a>
         <a href={`${base}/blog`} class="nav-link">Posts</a>
         <a href="https://franklinbaldo.github.io" class="nav-link">Main blog ↗</a>
-        {/* client:load — keyboard shortcut (Cmd+K) must be bound before user interaction */}
-        <SearchModal client:load />
+        <SearchModal client:idle />
         <FontSizeControl client:idle />
         <ThemeToggle client:idle />
       </nav>

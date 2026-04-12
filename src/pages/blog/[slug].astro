@@ -29,8 +29,7 @@ const postUrl = Astro.url.href;
   description={post.data.description}
   ogType="article"
 >
-  {/* client:load — progress bar must track scroll from the very first scroll event */}
-  <ReadingProgress client:load />
+  <ReadingProgress client:idle />
 
   <div class="post-header">
     <h1>{post.data.title}</h1>
