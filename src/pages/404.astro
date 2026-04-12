@@ -1,0 +1,13 @@
+---
+import Layout from '../layouts/Layout.astro';
+const base = import.meta.env.BASE_URL;
+---
+<Layout title="404: Not Found — Events All the Way Down">
+  <main class="container" style="text-align: center; padding-top: 10vh; min-height: 60vh;">
+    <h1 style="font-size: 3rem; margin-bottom: 1rem;">404</h1>
+    <p style="color: var(--color-muted); font-size: 1.25rem; margin-bottom: 2rem; max-width: 100%;">
+      The event you are looking for has already passed or never occurred.
+    </p>
+    <a href={base} style="font-size: 1.1rem;">← Return to the present</a>
+  </main>
+</Layout>
