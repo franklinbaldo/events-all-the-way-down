@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
 
 export async function GET(context: APIContext) {
+  const base = import.meta.env.BASE_URL;
   const posts = await getCollection('blog', ({ data }) => !data.draft);
 
   // Sort by date, newest first
@@ -11,12 +12,12 @@ export async function GET(context: APIContext) {
   return rss({
     title: 'Events All the Way Down',
     description: 'A blog on process ontology, intelligence, and becoming — by Franklin Silveira Baldo',
-    site: context.site,
+    site: context.site!,
     items: posts.map((post) => ({
       title: post.data.title,
       pubDate: post.data.date,
       description: post.data.description,
-      link: `${import.meta.env.BASE_URL}blog/${post.id}/`,
+      link: `${base}blog/${post.id}/`,
     })),
     customData: `<language>en</language>`,
   });
