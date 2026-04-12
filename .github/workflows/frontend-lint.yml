@@ -88,6 +88,10 @@ jobs:
             exit 1
           fi
 
-      # ── Rule 7: Build must succeed ────────────────────────────────────────────
+      # ── Rule 7: TypeScript type check ─────────────────────────────────────────
+      - name: Type check
+        run: npm run check
+
+      # ── Rule 8: Build must succeed ────────────────────────────────────────────
       - name: Build passes
         run: npm run build
