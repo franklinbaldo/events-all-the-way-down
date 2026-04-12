@@ -1,7 +1,8 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
+import type { APIContext } from 'astro';
 
-export async function GET(context: any) {
+export async function GET(context: APIContext) {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
 
   // Sort by date, newest first
@@ -15,7 +16,7 @@ export async function GET(context: any) {
       title: post.data.title,
       pubDate: post.data.date,
       description: post.data.description,
-      link: `/events-all-the-way-down/blog/${post.id}/`,
+      link: `${import.meta.env.BASE_URL}blog/${post.id}/`,
     })),
     customData: `<language>en</language>`,
   });

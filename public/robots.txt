@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://franklinbaldo.github.io/events-all-the-way-down/sitemap-index.xml
