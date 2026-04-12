@@ -8,7 +8,12 @@
 
   onMount(() => {
     const saved = parseFloat(localStorage.getItem('fontSizeScale') ?? '');
-    if (STEPS.includes(saved)) scale = saved;
+    if (STEPS.includes(saved)) {
+      scale = saved;
+    } else {
+      localStorage.removeItem('fontSizeScale');
+      document.documentElement.style.setProperty('--font-size-scale', String(DEFAULT));
+    }
   });
 
   function setScale(s) {
