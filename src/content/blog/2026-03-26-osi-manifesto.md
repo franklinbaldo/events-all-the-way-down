@@ -15,11 +15,15 @@ What nobody told us is that it was a **philosophical manifesto**.
 
 Before diving in — if you have never seen the OSI model explained, two videos are worth your time. NetworkChuck is energetic and concrete (he traces an HTTP request through every layer with actual protocols, and somehow makes it fun):
 
-https://www.youtube.com/watch?v=AW1lMmeRKak
+<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;margin:1.5rem 0;">
+  <iframe src="https://www.youtube.com/watch?v=AW1lMmeRKak" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe>
+</div>
 
 Computerphile is more conceptual, asking *why* we design networks in layers at all:
 
-https://www.youtube.com/watch?v=eelvWAURfdI
+<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;margin:1.5rem 0;">
+  <iframe src="https://www.youtube.com/watch?v=eelvWAURfdI" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe>
+</div>
 
 Watch either one. Then come back and read the rest of this as philosophy, not as CCNA prep.
 
@@ -47,8 +51,6 @@ The central organizing principle of the OSI model is almost aggressively simple:
 └──────────────────────────────────┘
         ↑
         also where your coffee went
-
-![Layers of abstraction](https://api.memegen.link/images/buzz/layers_of_abstraction/everywhere.png)
 ```
 
 The Physical layer handles pulses of electricity or light. It does not know what those pulses mean. The Network layer routes packets. It does not know whether those packets carry cat videos or ransomware. The Application layer handles HTTP. It genuinely does not care if it is running over fiber optic cable or a [series of tubes](https://en.wikipedia.org/wiki/Series_of_tubes).
@@ -99,7 +101,7 @@ The OSI model offers a different answer, and it requires no theology: the layers
 
 The harmony is not pre-established. It is maintained — actively, continuously, event by event, across boundaries that remain opaque.
 
-Leibniz spent decades on this problem. The IETF figured it out via RFC.
+Leibniz spent decades on this problem. The IETF (Internet Engineering Task Force — the standards body that governs internet protocols) figured it out via RFC (Request for Comments — the document format in which every internet standard is published and debated).
 
 ## The Physical Layer and the Irreducible Event
 
@@ -139,13 +141,13 @@ The practical consequence: information cannot be "securely transmitted" in an ab
 
 If the OSI model is correct — and forty years of the internet suggest it is correct enough — then certain questions dissolve and others become more interesting.
 
-**"Where does meaning live?"** dissolves. Meaning does not live anywhere in particular. It is not encoded in the electrons, the packets, the bytes, or even the application response. It is produced in the act of interpretation — in the encounter between a sending layer and a receiving layer, each applying its own rules to the events it observes. 
+**"Where does meaning live?"** dissolves. Meaning does not live anywhere in particular. It is not encoded in the electrons, the packets, the bytes, or even the application response. It is produced in the act of interpretation — in the encounter between a sending layer and a receiving layer, each applying its own rules to the events it observes.
 
 Scale this up to humans communicating with humans, and the structure is the same. Meaning is not transmitted. It is enacted.
 
 (This is why "I know what I meant" is never a complete defense. The receiving layer interpreted what it received, not what you intended to send. Layer 8 problems are architecturally inevitable.)
 
-**"How can systems that cannot see each other coordinate?"** gets more interesting. The OSI model's answer is rigorous: through carefully designed interfaces that define what events will pass between them, what format those events take, and what each layer commits to producing when it receives them. 
+**"How can systems that cannot see each other coordinate?"** gets more interesting. The OSI model's answer is rigorous: through carefully designed interfaces that define what events will pass between them, what format those events take, and what each layer commits to producing when it receives them.
 
 The layers are blind to each other's interiors. The interfaces make them cooperate anyway. The blindness is **load-bearing**.
 
@@ -169,8 +171,6 @@ But the model they built describes something more general. The next time someone
 Events all the way down. We wrote the specification in 1984.
 
 We just forgot to read it as philosophy.
-
-![Yo Dawg](https://api.memegen.link/images/yodawg/yo_dawg_i_heard_you_like_events/so_i_put_events_in_your_events.png)
 
 ---
 
