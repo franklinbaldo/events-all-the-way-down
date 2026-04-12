@@ -1,0 +1,130 @@
+name: Frontend Rules
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+jobs:
+  lint:
+    name: Enforce FRONTEND.md rules
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # ── Rule 1: No Google Fonts requests ─────────────────────────────────────
+      # FRONTEND.md Performance Rules §1: use @fontsource (self-hosted), never
+      # @import from fonts.googleapis.com.
+      - name: No Google Fonts imports
+        run: |
+          if grep -r "fonts\.googleapis\.com" src/; then
+            echo "::error::Google Fonts @import found. Use @fontsource/* instead (FRONTEND.md §Performance Rules)."
+            exit 1
+          fi
+
+      # ── Rule 2: No banned dependencies ───────────────────────────────────────
+      # FRONTEND.md §Stack / "What is deliberately absent": React, Vue, Solid,
+      # Tailwind, TanStack Query, SWR are explicitly excluded.
+      - name: No banned npm dependencies
+        run: |
+          node - <<'EOF'
+          const pkg = JSON.parse(require('fs').readFileSync('package.json', 'utf8'));
+          const all = { ...pkg.dependencies, ...pkg.devDependencies };
+          const banned = ['react', 'react-dom', 'vue', '@vue', 'solid-js', '@solidjs',
+                          'tailwindcss', '@tailwindcss', '@tanstack', 'swr'];
+          const found = Object.keys(all).filter(k => banned.some(b => k === b || k.startsWith(b + '/')));
+          if (found.length) {
+            console.error('Banned dependency found:', found.join(', '));
+            console.error('See FRONTEND.md §"What is deliberately absent".');
+            process.exit(1);
+          }
+          console.log('No banned dependencies.');
+          EOF
+
+      # ── Rule 3: client:load must have a justification comment ─────────────────
+      # FRONTEND.md §Svelte Islands / Hydration directives: client:load requires
+      # a comment explaining why immediate load is necessary.
+      - name: client:load must have justification comments
+        run: |
+          node - <<'EOF'
+          const { execSync } = require('child_process');
+          const { readFileSync, readdirSync, statSync } = require('fs');
+          const path = require('path');
+
+          function walk(dir) {
+            return readdirSync(dir).flatMap(f => {
+              const full = path.join(dir, f);
+              return statSync(full).isDirectory() ? walk(full) : [full];
+            });
+          }
+
+          let failed = false;
+          for (const file of walk('src').filter(f => f.endsWith('.astro'))) {
+            const lines = readFileSync(file, 'utf8').split('\n');
+            lines.forEach((line, i) => {
+              if (/client:load/.test(line)) {
+                const prev = i > 0 ? lines[i - 1] : '';
+                if (!/client:load/.test(prev) || !/<!--/.test(prev) && !/{\/\*/.test(prev)) {
+                  // Check the preceding non-empty line for a comment
+                  let commentFound = false;
+                  for (let j = i - 1; j >= Math.max(0, i - 3); j--) {
+                    if (/<!--.*client:load|\/\*.*client:load/.test(lines[j])) {
+                      commentFound = true;
+                      break;
+                    }
+                  }
+                  if (!commentFound) {
+                    console.error(`${file}:${i + 1}: client:load used without a justification comment.`);
+                    console.error(`  Add a comment like: {/* client:load — reason why */}`);
+                    failed = true;
+                  }
+                }
+              }
+            });
+          }
+          if (failed) {
+            console.error('\nSee FRONTEND.md §Svelte Islands / Hydration directives.');
+            process.exit(1);
+          }
+          console.log('All client:load usages are justified.');
+          EOF
+
+      # ── Rule 4: No raw <img> tags in Astro/Svelte source files ───────────────
+      # FRONTEND.md Performance Rules §4: use Astro <Image /> for automatic
+      # format conversion and responsive sizing.
+      - name: No raw <img> tags in Astro/Svelte files
+        run: |
+          if grep -rn "<img[ >]" src --include="*.astro" --include="*.svelte"; then
+            echo "::error::Raw <img> tag found. Use Astro's <Image /> component instead (FRONTEND.md §Performance Rules)."
+            exit 1
+          fi
+
+      # ── Rule 5: No CSS modules ────────────────────────────────────────────────
+      # FRONTEND.md §Styling System: all styles in global.css, no CSS modules.
+      - name: No CSS module files
+        run: |
+          if find src -name "*.module.css" | grep -q .; then
+            echo "::error::CSS module file found. All styles belong in src/styles/global.css (FRONTEND.md §Styling System)."
+            exit 1
+          fi
+
+      # ── Rule 6: No analytics or tracking scripts ──────────────────────────────
+      # FRONTEND.md Performance Rules §6: no analytics, tracking pixels, social SDKs.
+      - name: No analytics or tracking scripts
+        run: |
+          PATTERNS="gtag\|googletagmanager\|fbq\|_gaq\|dataLayer\.push\|hotjar\|heap\.track\|mixpanel\|amplitude\|segment\.com"
+          if grep -rn "$PATTERNS" src --include="*.astro" --include="*.svelte" --include="*.ts" --include="*.js"; then
+            echo "::error::Analytics or tracking script found. FRONTEND.md §Performance Rules §6 prohibits analytics."
+            exit 1
+          fi
+
+      # ── Rule 7: Build must succeed ────────────────────────────────────────────
+      - name: Build passes
+        run: npm run build

@@ -1,8 +1,9 @@
 <script>
   import { onMount } from 'svelte';
+  import { FONT_SIZE_STEPS, FONT_SIZE_DEFAULT } from '../lib/fontSizeSteps';
 
-  const STEPS = [0.85, 1, 1.15, 1.3];
-  const DEFAULT = 1;
+  const STEPS = [...FONT_SIZE_STEPS];
+  const DEFAULT = FONT_SIZE_DEFAULT;
 
   let scale = $state(DEFAULT);
 

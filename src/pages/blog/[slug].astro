@@ -29,6 +29,7 @@ const postUrl = Astro.url.href;
   description={post.data.description}
   ogType="article"
 >
+  {/* client:load — progress bar must track scroll from the very first scroll event */}
   <ReadingProgress client:load />
 
   <div class="post-header">
@@ -49,7 +50,7 @@ const postUrl = Astro.url.href;
     </article>
 
     <aside aria-label="Table of contents">
-      <TableOfContents client:load />
+      <TableOfContents client:idle />
     </aside>
   </div>
 

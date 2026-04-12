@@ -20,6 +20,6 @@ const base = import.meta.env.BASE_URL;
 <Layout title="Posts — Events All the Way Down">
   <main class="container">
     <h1 style="margin-bottom: 2rem;">Posts</h1>
-    <TagFilter posts={postsData} {base} client:load />
+    <TagFilter posts={postsData} {base} client:idle />
   </main>
 </Layout>
