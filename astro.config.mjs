@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 import svelte from '@astrojs/svelte';
 import mdx from '@astrojs/mdx';
-import { remarkDownloadImages } from './src/plugins/remark-download-images.mjs';
+import { remarkDownloadImages } from './src/plugins/remark-download-images.ts';
 
 const BASE = '/events-all-the-way-down';
 

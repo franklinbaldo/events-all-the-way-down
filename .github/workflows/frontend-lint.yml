@@ -88,7 +88,18 @@ jobs:
             exit 1
           fi
 
-      # ── Rule 7: TypeScript type check ─────────────────────────────────────────
+      # ── Rule 7: No plain JavaScript files in src/ ────────────────────────────
+      # All source files must be TypeScript (.ts) or framework files
+      # (.astro, .svelte). Plain .js / .mjs files bypass type checking.
+      - name: No JS files in src
+        run: |
+          if find src -name "*.js" -o -name "*.mjs" | grep -q .; then
+            echo "::error::Plain JavaScript file found in src/. Use TypeScript instead."
+            find src -name "*.js" -o -name "*.mjs"
+            exit 1
+          fi
+
+      # ── Rule 8: TypeScript type check ─────────────────────────────────────────
       - name: Type check
         run: npm run check
 
