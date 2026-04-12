@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import ThemeToggle from '../components/ThemeToggle.svelte';
 import SearchModal from '../components/SearchModal.svelte';
+import FontSizeControl from '../components/FontSizeControl.svelte';
 
 interface Props {
   title: string;
@@ -50,12 +51,16 @@ const siteName = 'Events All the Way Down';
 
   <link rel="canonical" href={canonicalUrl} />
 
-  <!-- Restore saved theme before first paint to prevent flash -->
+  <!-- Restore saved theme and font size before first paint to prevent flash -->
   <script is:inline>
     (function () {
       var t = localStorage.getItem('theme') ||
         (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       document.documentElement.dataset.theme = t;
+      /* Valid steps — must stay in sync with src/lib/fontSizeSteps.ts */
+      var s = localStorage.getItem('fontSizeScale');
+      if (s && ['0.85','1','1.15','1.3'].indexOf(s) !== -1)
+        document.documentElement.style.setProperty('--font-size-scale', s);
     })();
   </script>
 </head>
@@ -66,7 +71,8 @@ const siteName = 'Events All the Way Down';
         <a href={base} class="site-title">{siteName}</a>
         <a href={`${base}/blog`} class="nav-link">Posts</a>
         <a href="https://franklinbaldo.github.io" class="nav-link">Main blog ↗</a>
-        <SearchModal client:load />
+        <SearchModal client:idle />
+        <FontSizeControl client:idle />
         <ThemeToggle client:idle />
       </nav>
     </div>

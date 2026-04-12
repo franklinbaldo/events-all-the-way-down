@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && pagefind --site dist",
+    "check": "astro check",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -15,12 +16,16 @@
     "@astrojs/mdx": "^5.0.3",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/svelte": "^8.0.4",
+    "@fontsource/eb-garamond": "^5.2.7",
     "astro": "^6.1.5",
     "astro-icon": "^1.1.5",
     "marked": "^18.0.0",
     "svelte": "^5.55.3"
   },
   "devDependencies": {
-    "pagefind": "^1.5.0"
+    "@astrojs/check": "^0.9.8",
+    "mdast": "^2.3.2",
+    "pagefind": "^1.5.0",
+    "typescript": "^5.9.3"
   }
 }

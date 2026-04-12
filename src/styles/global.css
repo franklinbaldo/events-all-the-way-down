@@ -1,8 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+@import '@fontsource/eb-garamond/400.css';
+@import '@fontsource/eb-garamond/400-italic.css';
+@import '@fontsource/eb-garamond/600.css';
 
 :root {
   --font-serif: "EB Garamond", Georgia, serif;
   --font-mono: ui-monospace, monospace;
+  --font-size-scale: 1;
   --color-bg: #faf8f4;
   --color-surface: #f2efe9;
   --color-border: #d6d0c4;
@@ -26,17 +29,17 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-serif);
-  font-size: 1.125rem;
+  font-size: calc(1.125rem * var(--font-size-scale));
   line-height: 1.75;
   -webkit-font-smoothing: antialiased;
 }
 
 .container { max-width: 44rem; margin: 0 auto; padding: 2rem 1.5rem; }
 
-h1 { font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
-h2 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; margin: 2rem 0 0.5rem; border-bottom: 1px solid var(--color-border); padding-bottom: 0.2em; }
-h3 { font-size: 1.2rem; font-weight: 600; margin: 1.5rem 0 0.4rem; }
-h4, h5, h6 { font-size: 1rem; font-weight: 600; margin: 1rem 0 0.3rem; }
+h1 { font-size: calc(2rem * var(--font-size-scale)); font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+h2 { font-size: calc(1.5rem * var(--font-size-scale)); font-weight: 600; letter-spacing: -0.02em; margin: 2rem 0 0.5rem; border-bottom: 1px solid var(--color-border); padding-bottom: 0.2em; }
+h3 { font-size: calc(1.2rem * var(--font-size-scale)); font-weight: 600; margin: 1.5rem 0 0.4rem; }
+h4, h5, h6 { font-size: calc(1rem * var(--font-size-scale)); font-weight: 600; margin: 1rem 0 0.3rem; }
 
 p, li { max-width: 68ch; margin-bottom: 1.2rem; }
 img, video { max-width: 100%; height: auto; }
@@ -169,11 +172,11 @@ pre { -webkit-overflow-scrolling: touch; }
 
 /* Mobile-specific adjustments (< 640px) */
 @media (max-width: 639px) {
-  body { font-size: 1rem; }
+  body { font-size: calc(1rem * var(--font-size-scale)); }
 
-  h1 { font-size: 1.5rem; }
-  h2 { font-size: 1.25rem; margin: 1.5rem 0 0.4rem; }
-  h3 { font-size: 1.1rem; }
+  h1 { font-size: calc(1.5rem * var(--font-size-scale)); }
+  h2 { font-size: calc(1.25rem * var(--font-size-scale)); margin: 1.5rem 0 0.4rem; }
+  h3 { font-size: calc(1.1rem * var(--font-size-scale)); }
 
   .container { padding: 1.25rem 1rem; }
 

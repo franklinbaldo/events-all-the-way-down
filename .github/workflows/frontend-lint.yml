@@ -1,0 +1,108 @@
+name: Frontend Rules
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+jobs:
+  lint:
+    name: Enforce FRONTEND.md rules
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # ── Rule 1: No Google Fonts requests ─────────────────────────────────────
+      # FRONTEND.md Performance Rules §1: use @fontsource (self-hosted), never
+      # @import from fonts.googleapis.com.
+      - name: No Google Fonts imports
+        run: |
+          if grep -r "fonts\.googleapis\.com" src/; then
+            echo "::error::Google Fonts @import found. Use @fontsource/* instead (FRONTEND.md §Performance Rules)."
+            exit 1
+          fi
+
+      # ── Rule 2: No banned dependencies ───────────────────────────────────────
+      # FRONTEND.md §Stack / "What is deliberately absent": React, Vue, Solid,
+      # Tailwind, TanStack Query, SWR are explicitly excluded.
+      - name: No banned npm dependencies
+        run: |
+          node - <<'EOF'
+          const pkg = JSON.parse(require('fs').readFileSync('package.json', 'utf8'));
+          const all = { ...pkg.dependencies, ...pkg.devDependencies };
+          const banned = ['react', 'react-dom', 'vue', '@vue', 'solid-js', '@solidjs',
+                          'tailwindcss', '@tailwindcss', '@tanstack', 'swr'];
+          const found = Object.keys(all).filter(k => banned.some(b => k === b || k.startsWith(b + '/')));
+          if (found.length) {
+            console.error('Banned dependency found:', found.join(', '));
+            console.error('See FRONTEND.md §"What is deliberately absent".');
+            process.exit(1);
+          }
+          console.log('No banned dependencies.');
+          EOF
+
+      # ── Rule 3: No client:load directives ────────────────────────────────────
+      # FRONTEND.md §Svelte Islands: prefer client:idle (non-critical enhancements)
+      # or client:visible (components only needed when in view). client:load blocks
+      # the main thread and should not be needed in a content-only blog.
+      - name: No client:load directives
+        run: |
+          if grep -rn "client:load" src --include="*.astro"; then
+            echo "::error::client:load found. Use client:idle or client:visible instead (FRONTEND.md §Svelte Islands)."
+            exit 1
+          fi
+
+      # ── Rule 4: No raw <img> tags in Astro/Svelte source files ───────────────
+      # FRONTEND.md Performance Rules §4: use Astro <Image /> for automatic
+      # format conversion and responsive sizing.
+      - name: No raw <img> tags in Astro/Svelte files
+        run: |
+          if grep -rn "<img[ >]" src --include="*.astro" --include="*.svelte"; then
+            echo "::error::Raw <img> tag found. Use Astro's <Image /> component instead (FRONTEND.md §Performance Rules)."
+            exit 1
+          fi
+
+      # ── Rule 5: No CSS modules ────────────────────────────────────────────────
+      # FRONTEND.md §Styling System: all styles in global.css, no CSS modules.
+      - name: No CSS module files
+        run: |
+          if find src -name "*.module.css" | grep -q .; then
+            echo "::error::CSS module file found. All styles belong in src/styles/global.css (FRONTEND.md §Styling System)."
+            exit 1
+          fi
+
+      # ── Rule 6: No analytics or tracking scripts ──────────────────────────────
+      # FRONTEND.md Performance Rules §6: no analytics, tracking pixels, social SDKs.
+      - name: No analytics or tracking scripts
+        run: |
+          PATTERNS="gtag\|googletagmanager\|fbq\|_gaq\|dataLayer\.push\|hotjar\|heap\.track\|mixpanel\|amplitude\|segment\.com"
+          if grep -rn "$PATTERNS" src --include="*.astro" --include="*.svelte" --include="*.ts" --include="*.js"; then
+            echo "::error::Analytics or tracking script found. FRONTEND.md §Performance Rules §6 prohibits analytics."
+            exit 1
+          fi
+
+      # ── Rule 7: No plain JavaScript files in src/ ────────────────────────────
+      # All source files must be TypeScript (.ts) or framework files
+      # (.astro, .svelte). Plain .js / .mjs files bypass type checking.
+      - name: No JS files in src
+        run: |
+          if find src -name "*.js" -o -name "*.mjs" | grep -q .; then
+            echo "::error::Plain JavaScript file found in src/. Use TypeScript instead."
+            find src -name "*.js" -o -name "*.mjs"
+            exit 1
+          fi
+
+      # ── Rule 8: TypeScript type check ─────────────────────────────────────────
+      - name: Type check
+        run: npm run check
+
+      # ── Rule 8: Build must succeed ────────────────────────────────────────────
+      - name: Build passes
+        run: npm run build
