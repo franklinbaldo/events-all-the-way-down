@@ -1,56 +1,76 @@
 ---
 title: "The Game on the Folded Grid"
 date: 2026-03-22
-description: "What happens when you play Lights Out inside Escher's distorted grid? A question about state spaces, impossible dimensions, and the problem of solving what seems to have no solution."
+description: "What happens when you play Lights Out inside Escher's distorted grid? A question about state spaces, impossible dimensions, and the price of working in the wrong space."
 tags: [mathematics, escher, linear algebra, game, dimensions, process]
 ---
 
-Two videos arrived on the exact same day.
+The space where a problem *seems* to live is not always the space where it *actually* lives. Working in the wrong space is not just inefficient — it is often the reason a problem feels permanently unsolvable.
 
-The first: 3Blue1Brown demonstrating that Escher's *Print Gallery* is not an artistic sleight of hand, but a mathematical transformation. Apply the complex logarithm, and the engraving "unrolls" into a flat, periodic plane. The space within the artwork is a grid—but a warped grid, folded upon itself by the complex exponential. The blank center Escher left unresolved is filled by the mathematical structure itself: there was no choice, it was the only possible answer.
+Two videos arrived on the same day and made this abstract observation concrete.
+
+The first: 3Blue1Brown demonstrating that Escher's *Print Gallery* is not an artistic sleight of hand but a mathematical transformation. Apply the complex logarithm — a function that converts rotation-and-scaling into simple translation, then re-rolls via the exponential — to the engraving, and it "unrolls" into a flat, periodic plane. The blank center Escher left unresolved disappears: it is filled by the mathematical structure itself, the only content it could possibly have. Escher worked in the projected space. The mathematicians worked in the actual space. Only one of them could fill the center.
 
 <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;margin:1.5rem 0;">
   <iframe src="https://www.youtube.com/embed/ldxFjLJ3rVY" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe>
 </div>
 
-The second: AlphaPhoenix, three years of work, a puzzle that required thinking in **3,721 dimensions**.
+The second: AlphaPhoenix, three years of work, a puzzle that required thinking in 3,721 dimensions.
 
 <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;margin:1.5rem 0;">
   <iframe src="https://www.youtube.com/embed/g8pjrVbdafY" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe>
 </div>
 
-The puzzle is *Lights Out*—a grid of luminous cells where every click toggles the state of the cell and its neighbors. In a 61×61 grid (61 × 61 = 3,721 cells), every possible state of the board is a vector in GF(2)^3721: a vector space over the field of two elements with 3,721 dimensions. Solving the puzzle is not about finding an intuitive strategy. It is about solving a system of linear equations in a space of absurd dimensionality, where "finding the solution" means navigating a geometry no human can directly visualize.
-
-The question I cannot stop asking: *what happens when you play Lights Out inside Escher's folded grid?*
+---
 
 ## The Grid as a State Space
 
-AlphaPhoenix's central insight is that the board is not a visual object—it is a vector. Each possible configuration of lights is a point in a 3,721-dimensional space. A "move" is a linear transformation. Solving the puzzle means finding the shortest path back to the origin of this space.
+The puzzle is *Lights Out* — a grid of cells where every click toggles the clicked cell and its immediate neighbors. Approachable on a small grid. Intractable on a 61×61 grid (3,721 cells) if you insist on thinking about it visually.
 
-The unsettling beauty of this result is that the difficulty does not lie in *seeing* the board. It lies in accepting that the board you see with your eyes—this flat grid of buttons—is merely the two-dimensional projection of a tremendously high-dimensional structure. The actual space where the game occurs is invisible.
+AlphaPhoenix's central insight: the board is not a visual object. It is a vector.
 
-Escher knew this. Not explicitly, not in mathematical language. But his entire body of work centers on this gap: between the space you *see* and the space where things *actually happen*.
+Every cell is either on (1) or off (0). The entire board state is a sequence of 3,721 ones and zeroes — a point in a 3,721-dimensional space. This space is built on GF(2) — the "field with only two elements," where arithmetic works mod 2: 0+0=0, 0+1=1, 1+1=0. Think of it as XOR logic: pressing a button twice is the same as not pressing it at all, since 1+1=0. Over this field, every possible board state is a vector, and every button press is a linear transformation — a specific, fixed pattern of coordinate flips.
+
+Solving the puzzle means finding a combination of button presses that transforms your current board state into the all-zeros (all-off) state. This is a system of linear equations over GF(2), and the state space has 2^3,721 possible configurations — a number so large it requires scientific notation to write.
+
+Not all boards are solvable. Some board states are simply unreachable by any combination of button presses. Why? Because of the *kernel of the adjacency operator* — the set of all button-pressing patterns that cancel each other out completely, leaving the board exactly as it was. (In linear algebra, the kernel of a transformation is the set of inputs that produce zero output; here, it is the set of "do-nothing" move sequences — combinations of presses that look like something but sum to nothing.) If your target board state is, in GF(2) terms, orthogonal to this kernel, it is reachable. If not, no amount of pressing will ever solve it.
+
+The unsolvable boards are not harder versions of the solvable ones. They live in a different region of a space that looks, from the outside, flat and uniform.
+
+The unsettling beauty of this result: the difficulty does not lie in *seeing* the board. It lies in accepting that the board you see with your eyes — this flat grid of buttons — is merely the two-dimensional projection of a structure with 3,721 dimensions. The actual space where the game occurs is invisible.
+
+---
 
 ## Warped Grid as the Geometry of the Impossible
 
-When Lenstra and de Smit applied the complex logarithm to the *Print Gallery*, what they revealed was that the space of the artwork possesses a non-Euclidean geometry. The grid you perceive is the projection of a toroidal surface. It folds, scales, and returns to itself.
+Escher knew this. Not in mathematical language — but his entire body of work turns on exactly this gap: between the space you *see* and the space where things *actually happen*.
 
-Imagine, then, playing Lights Out on *that* grid.
+What would it mean to play Lights Out on *that* grid?
 
-Not on a flat 61×61 grid, but on a grid obeying the Gallery's geometry—where lines that appear parallel intersect, where the "neighbor" of a cell in the top corner might be the same cell in the bottom corner, only transformed by rotation and scaling. The state space of this game would not be a hyperplane in GF(2)^3721. It would be something with a topology we lack the language to easily describe.
+Not on a flat 61×61 grid, but on a grid obeying the *Print Gallery*'s geometry — where lines that appear parallel intersect, where the "neighbor" of a cell in one corner might be the same cell in another corner, transformed by rotation and scaling. The adjacency operator for this game would reflect the geometry of a Möbius transformation — a function of the form (az+b)/(cz+d) that generalizes rotation, scaling, and inversion simultaneously, mapping points in the complex plane back onto themselves in ways that stretch Euclidean intuition past its breaking point.
 
-This is not a daydream. It is a concrete question: *what is the kernel of the adjacency operator when the grid possesses the geometry of a Möbius transformation?*
+The state space of this version of Lights Out would not be a hyperplane in GF(2)^3721. It would have a topology that requires different language to describe.
+
+This is not a daydream. It is a concrete, open mathematical question: *what is the kernel of the adjacency operator when the grid has the geometry of a conformal map like the one Lenstra and de Smit used?*
+
+I do not know the answer. I suspect the answer is stranger than the flat-grid case, and that the strangeness tells us something important about what "solvability" means when the underlying space is not what it appears to be.
+
+---
 
 ## Why This Matters Now
 
-It is 2026. Two years ago, the artificial intelligence mainstream discovered that the geometry of a language model's parameter space is not Euclidean. That "moving" a model toward desired behavior means navigating a staggeringly high-dimensional space with strange curvatures. That the "neighbors" of a point in this space are not what our flat intuition suggests.
+It is 2026. In the past few years, machine learning (ML) researchers discovered that the parameter space of a large language model — the high-dimensional space of all its billions of adjustable weights — is not Euclidean. "Moving" a model toward a desired behavior is not like walking in a straight line toward a target. The space curves. Configurations that seem nearby in terms of parameter values can behave very differently. Configurations that seem distant can be functionally adjacent.
 
-Every ML engineer is, unwittingly, playing Lights Out on a warped grid.
+Every ML engineer is, without always realizing it, playing Lights Out on a warped grid.
 
-The question is whether they are using linear algebra in a flat space to solve a problem that lives in a folded one. And the probable answer is: yes. Because it is easier. Because the grid looks flat when you examine it closely. Because the complex logarithm requires effort.
+The question is whether they are using tools designed for flat space to solve a problem that lives in a folded one. The probable answer is: often, yes. Because the flat tools are the ones already built. Because the grid looks locally flat when you examine any small patch closely. Because Escher's complex logarithm requires effort, and the flat approximation gets you surprisingly far before it stops working.
 
-What 3Blue1Brown showed about Escher, and what AlphaPhoenix showed about Lights Out, are the exact same thing: **the space where the problem seems to exist is not the space where it actually lives.** The solution requires accepting the real geometry—not the comfortable projection.
+What 3Blue1Brown showed about Escher, and what AlphaPhoenix showed about Lights Out, are the same lesson at different scales: **the space where the problem seems to exist is not the space where it actually lives**. The solution requires accepting the real geometry — not the comfortable projection.
+
+Working in the projected space is not just less efficient. It is the reason certain problems stay permanently unsolved.
 
 *Events All the Way Down* is an attempt to stop playing in the projected space.
 
-— **Franklin Silveira Baldo**
+---
+
+*Franklin Silveira Baldo — Porto Velho, March 2026*
