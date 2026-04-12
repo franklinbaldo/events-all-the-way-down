@@ -12,12 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - run: npm ci
+      # ── Static checks (no npm install needed) ────────────────────────────────
 
       # ── Rule 1: No Google Fonts requests ─────────────────────────────────────
       # FRONTEND.md Performance Rules §1: use @fontsource (self-hosted), never
@@ -99,10 +94,18 @@ jobs:
             exit 1
           fi
 
+      # ── Build checks (require npm install) ───────────────────────────────────
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
       # ── Rule 8: TypeScript type check ─────────────────────────────────────────
       - name: Type check
         run: npm run check
 
-      # ── Rule 8: Build must succeed ────────────────────────────────────────────
+      # ── Rule 9: Build must succeed ────────────────────────────────────────────
       - name: Build passes
         run: npm run build
