@@ -69,22 +69,22 @@ jobs:
           for (const file of walk('src').filter(f => f.endsWith('.astro'))) {
             const lines = readFileSync(file, 'utf8').split('\n');
             lines.forEach((line, i) => {
-              if (/client:load/.test(line)) {
-                const prev = i > 0 ? lines[i - 1] : '';
-                if (!/client:load/.test(prev) || !/<!--/.test(prev) && !/{\/\*/.test(prev)) {
-                  // Check the preceding non-empty line for a comment
-                  let commentFound = false;
-                  for (let j = i - 1; j >= Math.max(0, i - 3); j--) {
-                    if (/<!--.*client:load|\/\*.*client:load/.test(lines[j])) {
-                      commentFound = true;
-                      break;
-                    }
+              // Skip lines that are themselves comments (avoid false positives from
+              // the justification comments containing the text "client:load").
+              const trimmed = line.trimStart();
+              if (/client:load/.test(line) && !/^(<!--|{\/\*)/.test(trimmed)) {
+                // Look for a justification comment in the preceding 3 lines.
+                let commentFound = false;
+                for (let j = i - 1; j >= Math.max(0, i - 3); j--) {
+                  if (/<!--.*client:load|\/\*.*client:load/.test(lines[j])) {
+                    commentFound = true;
+                    break;
                   }
-                  if (!commentFound) {
-                    console.error(`${file}:${i + 1}: client:load used without a justification comment.`);
-                    console.error(`  Add a comment like: {/* client:load — reason why */}`);
-                    failed = true;
-                  }
+                }
+                if (!commentFound) {
+                  console.error(`${file}:${i + 1}: client:load used without a justification comment.`);
+                  console.error(`  Add a comment like: {/* client:load — reason why */}`);
+                  failed = true;
                 }
               }
             });
