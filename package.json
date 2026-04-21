@@ -18,7 +18,7 @@
     "@astrojs/sitemap": "^3.7.2",
     "@astrojs/svelte": "^8.0.4",
     "@fontsource/eb-garamond": "^5.2.7",
-    "astro": "^6.1.5",
+    "astro": "^6.1.8",
     "astro-icon": "^1.1.5",
     "marked": "^18.0.0",
     "mdast-util-to-string": "^4.0.0",
